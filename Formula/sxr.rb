@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.1.1.tar.gz"
-  sha256 "4b8fec7ef8ecab0c45be36a640b5f4871b620efb7c366511cb32132f68fd89cb"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.1.2.tar.gz"
+  sha256 "62e8b15cf0aa23840d2225d87c3d33a09d1f32b1fb4b95f92c05f452e8302c89"
   license "MIT"
 
   depends_on "python@3.13"
