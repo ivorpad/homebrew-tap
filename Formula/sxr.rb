@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.4.0.tar.gz"
-  sha256 "7838442db64a6c5adfb67d816a1e909d92067481ad30ed7b4ec14d175122743b"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "2b67f71bdd4d411b23990026e6211e80e585ab579379e787795b98e51623d67b"
   license "MIT"
 
   depends_on "python@3.13"
@@ -49,6 +49,7 @@ class Sxr < Formula
   end
 
   test do
-    assert_match "session x-ray", shell_output("#{bin}/sxr --help")
+    assert_match version.to_s, shell_output("#{bin}/sxr --version")
+    assert_match "--archives", shell_output("#{bin}/sxr --help")
   end
 end
