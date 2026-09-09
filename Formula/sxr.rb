@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.8.0.tar.gz"
-  sha256 "016ad1f8f6bf2d5bb4b04a0b5c5d658c109f28f1d89895a745aa78abaa155516"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.8.1.tar.gz"
+  sha256 "1a6e4167e52ab77a47838d610f22982b8e98eeea4e8344678dbd480a47acc388"
   license "MIT"
 
   depends_on "python@3.13"
@@ -102,6 +102,12 @@ class Sxr < Formula
     assert_equal %w[claude codex], found["results"].map { |hit| hit["provider"] }.sort
     found["results"].each { |hit| assert_match "--file", hit["follow_up"] }
     assert_equal found, JSON.parse(shell_output(query))
+
+    ENV["CODEX_THREAD_ID"] = "brew-codex"
+    current_query = "#{bin}/sxr find false --all-projects --json"
+    assert_empty JSON.parse(shell_output(current_query, 1))["results"]
+    restored = JSON.parse(shell_output("#{current_query} --include-current"))
+    assert_equal "brew-codex", restored["results"][0]["id"]
 
     system bin/"sxr", "index", "--clear"
     refute_path_exists testpath/"cache/search.sqlite3"
