@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.5.0.tar.gz"
-  sha256 "2b67f71bdd4d411b23990026e6211e80e585ab579379e787795b98e51623d67b"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.6.0.tar.gz"
+  sha256 "b9c08c6a40b0559365352436bbe459c820a5190ae5ce6f6e353d38a2211fe3b0"
   license "MIT"
 
   depends_on "python@3.13"
@@ -51,5 +51,24 @@ class Sxr < Formula
   test do
     assert_match version.to_s, shell_output("#{bin}/sxr --version")
     assert_match "--archives", shell_output("#{bin}/sxr --help")
+
+    ENV["CLAUDE_CONFIG_DIR"] = (testpath/"claude").to_s
+    ENV["SXR_CACHE_DIR"] = (testpath/"cache").to_s
+    session = testpath/"claude/projects/example/session.jsonl"
+    session.dirname.mkpath
+    record = { type: "user", timestamp: "2026-01-01T00:00:00Z", cwd: testpath.to_s,
+               message: { role: "user", content: "brew-index-first" } }
+    session.write "#{JSON.generate(record)}\n"
+
+    system bin/"sxr", "--path", testpath, "index"
+    assert_path_exists testpath/"cache/search.sqlite3"
+    assert_match "brew-index-first", shell_output("#{bin}/sxr --path #{testpath} grep -F brew-index-first")
+
+    record[:message][:content] = "brew-index-appended"
+    session.open("a") { |file| file.puts JSON.generate(record) }
+    assert_match "brew-index-appended", shell_output("#{bin}/sxr --path #{testpath} grep -F brew-index-appended")
+
+    system bin/"sxr", "index", "--clear"
+    refute_path_exists testpath/"cache/search.sqlite3"
   end
 end
