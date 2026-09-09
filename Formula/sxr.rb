@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.6.0.tar.gz"
-  sha256 "b9c08c6a40b0559365352436bbe459c820a5190ae5ce6f6e353d38a2211fe3b0"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.7.0.tar.gz"
+  sha256 "45aaeafff9e352bbff36cefdd9e5f9d16b99f08a6f2bfabc6037ca895f9df364"
   license "MIT"
 
   depends_on "python@3.13"
@@ -67,6 +67,30 @@ class Sxr < Formula
     record[:message][:content] = "brew-index-appended"
     session.open("a") { |file| file.puts JSON.generate(record) }
     assert_match "brew-index-appended", shell_output("#{bin}/sxr --path #{testpath} grep -F brew-index-appended")
+
+    command = "#{bin}/sxr show --file #{session} --around 1 --context 0"
+    first = shell_output(command)
+    assert_match "brew-index-first", first
+    assert_equal first, shell_output(command)
+
+    rollout = testpath/"rollout.jsonl"
+    metadata = { type: "session_meta", payload: { id: "brew-codex", cwd: testpath.to_s } }
+    call = { type:    "response_item",
+             payload: { type: "function_call", name: "exec_command", call_id: "test-call",
+                        arguments: JSON.generate({ cmd: "false" }) } }
+    rollout.write "#{JSON.generate(metadata)}\n#{JSON.generate(call)}\n"
+    command = "#{bin}/sxr show --file #{rollout} --around 2 --context 0"
+    first = shell_output(command)
+    assert_match "exec_command", first
+    assert_equal first, shell_output(command)
+
+    result = { type:    "response_item",
+               payload: { type: "function_call_output", call_id: "test-call",
+                          output: JSON.generate({ output: "failed", metadata: { exit_code: 1 } }) } }
+    rollout.open("a") { |file| file.puts JSON.generate(result) }
+    first = shell_output(command)
+    assert_match "-> err", first
+    assert_equal first, shell_output(command)
 
     system bin/"sxr", "index", "--clear"
     refute_path_exists testpath/"cache/search.sqlite3"
