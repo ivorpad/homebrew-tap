@@ -3,8 +3,8 @@ class Sxr < Formula
 
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.7.0.tar.gz"
-  sha256 "45aaeafff9e352bbff36cefdd9e5f9d16b99f08a6f2bfabc6037ca895f9df364"
+  url "https://github.com/ivorpad/sxr/archive/refs/tags/v0.8.0.tar.gz"
+  sha256 "016ad1f8f6bf2d5bb4b04a0b5c5d658c109f28f1d89895a745aa78abaa155516"
   license "MIT"
 
   depends_on "python@3.13"
@@ -91,6 +91,17 @@ class Sxr < Formula
     first = shell_output(command)
     assert_match "-> err", first
     assert_equal first, shell_output(command)
+
+    ENV["CODEX_HOME"] = (testpath/"codex").to_s
+    indexed_rollout = testpath/"codex/sessions/rollout-brew.jsonl"
+    indexed_rollout.dirname.mkpath
+    indexed_rollout.write rollout.read
+    query = "#{bin}/sxr find 'brew-index-first false' --all-projects --any --json"
+    found = JSON.parse(shell_output(query))
+    assert found["complete"]
+    assert_equal %w[claude codex], found["results"].map { |hit| hit["provider"] }.sort
+    found["results"].each { |hit| assert_match "--file", hit["follow_up"] }
+    assert_equal found, JSON.parse(shell_output(query))
 
     system bin/"sxr", "index", "--clear"
     refute_path_exists testpath/"cache/search.sqlite3"
