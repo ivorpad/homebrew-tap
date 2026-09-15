@@ -1,28 +1,28 @@
 class Sxr < Formula
   desc "Session x-ray: read Claude Code and Codex sessions from the terminal"
   homepage "https://github.com/ivorpad/sxr"
-  version "0.13.0"
+  version "0.14.0"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/ivorpad/sxr/releases/download/v0.13.0/sxr-0.13.0-macos-arm64.tar.gz"
-      sha256 "10fb0cbe26cf04debb236e9371f92abf7e3f4c532ecda572dbfe360d109cb454"
+      url "https://github.com/ivorpad/sxr/releases/download/v0.14.0/sxr-0.14.0-macos-arm64.tar.gz"
+      sha256 "58f3a1e5e77ab05ed4d9d26164aff750af493946581113d27be8fd7e4725a093"
     end
     on_intel do
-      url "https://github.com/ivorpad/sxr/releases/download/v0.13.0/sxr-0.13.0-macos-x86_64.tar.gz"
-      sha256 "2fd878cebc2a11b38f9c3a9d965ce2c4ece6af55aedbcf3551c86c5975dc5e4b"
+      url "https://github.com/ivorpad/sxr/releases/download/v0.14.0/sxr-0.14.0-macos-x86_64.tar.gz"
+      sha256 "f4409af916a0c68e11f5000f9b8e61c3473e94c45384e0a54295be2690ab978b"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/ivorpad/sxr/releases/download/v0.13.0/sxr-0.13.0-linux-arm64.tar.gz"
-      sha256 "9e8b97283445a04e88e33189749f727a0043eab31a6c22040d96891298fa68c9"
+      url "https://github.com/ivorpad/sxr/releases/download/v0.14.0/sxr-0.14.0-linux-arm64.tar.gz"
+      sha256 "a138eec21e763e76055837c152385967ce85d5458ca2b63892dc1543d189f430"
     end
     on_intel do
-      url "https://github.com/ivorpad/sxr/releases/download/v0.13.0/sxr-0.13.0-linux-x86_64.tar.gz"
-      sha256 "df42d947dfc5b153cc3944c9050e8694d27797fb46d5cbc5fd178101a00a88c5"
+      url "https://github.com/ivorpad/sxr/releases/download/v0.14.0/sxr-0.14.0-linux-x86_64.tar.gz"
+      sha256 "39bd7a5f3d264a5ed8479966af67ac101864fe59780c3bb5006246db47c5d0b5"
     end
   end
 
