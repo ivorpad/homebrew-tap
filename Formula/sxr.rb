@@ -4,6 +4,14 @@ class Sxr < Formula
   version "0.14.0"
   license "MIT"
 
+  bottle do
+    root_url "https://github.com/ivorpad/sxr/releases/download/v0.14.0"
+    sha256 cellar: :any,                 arm64_sonoma: "75fdb294bb1f38531c00b453f649855023eec066af8097640e9bc1d2446ae7c3"
+    sha256 cellar: :any,                 sequoia:      "e484eb81f666f54b31ea3724f8d03d5bca58996a1f6d6888fb79922812ab2a9c"
+    sha256 cellar: :any_skip_relocation, arm64_linux:  "205e5621b7097355c71efcc8b3a4941fe0f03181e545200239a9263e439d8207"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "ee8b2f312186f4cef98a06956c5734c04cf120445abfcdf9fa6a6a7b678828d7"
+  end
+
   on_macos do
     on_arm do
       url "https://github.com/ivorpad/sxr/releases/download/v0.14.0/sxr-0.14.0-macos-arm64.tar.gz"
@@ -94,5 +102,7 @@ class Sxr < Formula
 
     system bin/"sxr", "index", "--clear"
     refute_path_exists testpath/"cache/search.sqlite3"
+  ensure
+    system bin/"sxr", "serve", "stop"
   end
 end
